@@ -70,3 +70,107 @@ Filepaths
 To this we join the file path which is in view > layouts folder and then append the extension to the file name
 
 Then we compile this template using hbs and render it.
+
+### Get db content in a table
+
+`person.js`
+
+```
+function getAll(callback) {
+  let sql = `select * from person`;
+  db(sql, [], callback);
+}
+```
+
+routing in `index.js`
+
+```
+case "/users":
+  db((err, result) => {
+    let content = { data: result };
+    - we have to pass the data in object format since in `getData handlebars` we access values using this.
+
+    res.end(renderTemplate("getData", content));
+  });
+  break;
+
+// renderTemplate fn
+let filePath = path.join(__dirname, "views", name + ".handlebars");
+console.log(filePath);
+let templateText = fs.readFileSync(filePath, "utf-8");
+let template = Handlebars.compile(templateText);
+return template(data);
+```
+
+`result`
+
+```
+[
+  {
+    p_id: 1,
+    p_name: 'ekr',
+    p_age: 22,
+    p_email: 'ekr@mail',
+    p_country: 'IN'
+  },
+  {
+    p_id: 2,
+    p_name: 'gjr',
+    p_age: 14,
+    p_email: 'gjr@mail',
+    p_country: 'IN'
+  },
+]
+```
+
+`{ data: result }`
+
+```
+{
+  data: [
+    {
+      p_id: 1,
+      p_name: 'ekr',
+      p_age: 22,
+      p_email: 'ekr@mail',
+      p_country: 'IN'
+    },
+    {
+      p_id: 2,
+      p_name: 'gjr',
+      p_age: 14,
+      p_email: 'gjr@mail',
+      p_country: 'IN'
+    },
+  ]
+}
+```
+
+We are storing the result into `{ data: result }` this format cause now we have a variable (data here) which can be used to iterate each objects in the array of objects from the getData.handlebars
+
+`getData.handlebars`
+
+```
+<h1 class="text-center"><u>Customers</u></h1>
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>AGE</th>
+            <th>EMAIL</th>
+            <th>COUNTRY</th>
+        </tr>
+        {{#each data}} - iterate the data array of objects
+        <tr>
+            <td>{{this.p_id}}</td> - access each elt using each iteration
+            <td>{{this.p_name}}</td>
+            <td>{{this.p_age}}</td>
+            <td>{{this.p_email}}</td>
+            <td>{{this.p_country}}</td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
+```

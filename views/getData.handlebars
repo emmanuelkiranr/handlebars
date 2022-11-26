@@ -1,0 +1,22 @@
+<h1 class="text-center"><u>Customers</u></h1>
+
+<div class="container">
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>AGE</th>
+            <th>EMAIL</th>
+            <th>COUNTRY</th>
+        </tr>
+        {{#each data}}
+        <tr>
+            <td>{{this.p_id}}</td>
+            <td>{{this.p_name}}</td>
+            <td>{{this.p_age}}</td>
+            <td>{{this.p_email}}</td>
+            <td>{{this.p_country}}</td>
+        </tr>
+        {{/each}}
+    </table>
+</div>
