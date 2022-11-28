@@ -3,6 +3,7 @@ import url from "url";
 import Handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
+import qs from "querystring";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import db from "./models/person.js";
@@ -15,18 +16,15 @@ const server = http.createServer((req, res) => {
   let link = url.parse(req.url, true);
   let path = link.pathname;
 
-  switch (path) {
-    case "/":
-      res.end(renderTemplate("main"));
-      break;
-    case "/users":
-      db((err, result) => {
-        console.log(result);
-        let content = { data: result };
-        console.log(content);
-        res.end(renderTemplate("getData", content));
-      });
-      break;
+  if (path == "/" && req.method == "GET") {
+    res.end(renderTemplate("index", { data: "Welcome To SQL DataBase" }));
+  } else if (path == "/users" && req.method == "GET") {
+    db.getAll((err, result) => {
+      console.log(result);
+      let content = { data: result };
+      console.log(content);
+      res.end(renderTemplate("getData", content));
+    });
   }
 });
 

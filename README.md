@@ -7,35 +7,30 @@ To render dynamic data from db to html page
 
 ## Setting up handlebars
 
-- Create a folder `views` inside it create 2 folder `layouts` and `partials`.
-- Inside the layouts we save the main html file in handlebars format. since this is the base layout on top of which we'll add the body data from other handlebar template templates.
-- So depending on the body data we render different views on top of the `main.handlebars` file.
+- Create a folder `views` inside it create a folder `partials`.
 
-- Inside partials we register the partials, since in all the page there is a navbar in the body data, and since the content inside in navbar doesnt change here we put the `navbar.handlebars` and similar files like footer in the partils directory.
+- Inside partials we register the partials, since in all the page there is a navbar, head and footer, and since the content inside these doesnt change, so we put them in the partials folder. `navbar.handlebars`. and we call these files in the html pages rendered as output.
 
-- The body data and all is defined in separate files which is stored directly under the views folder.
-- In the routes we'll define which body data should be rendered along withe the `main.handlebars`
+- We create different pages for displaying the body content, ie one page for displaying the db (index.handlebars), another for adding to the db(addData.handlebars). And we send the appropriate page as response from the route.
 
-<!-- hbs path test -->
+- This will render a complete html page along with partials with the data output.
 
 ### Create a basic server using http to test the route to hbs
 
 ```
-registerPartials(); - This fn gets called before the server starts and this sets the partials
+registerPartials(); - This fn gets called before the server starts and sets the partials
 
 const server = http.createServer((req, res) => {
   let link = url.parse(req.url, true);
   let path = link.pathname;
 
-  switch (path) {
-    case "/":
-      res.end(renderTemplate("main")); - once executed calls the renderTemplate fn and
-      break;
+  if (path == "/" && req.method == "GET") {
+    res.end(renderTemplate("index", {data: "Home Page"})); - This will call the renderTemplate fn and will render the page passed as parameter along with the data passed as an object
   }
 });
 ```
 
-This below code will register all the partials (navbar in this case), once registered, in the main.hbs in layouts we can use {{>navbar}} statement and this will fetch the navbar from the partials and add to the main hbs template.
+This below code will register all the partials (navbar in this case), once registered, in the index.hbs in views we can use {{>navbar}} statement and this will fetch the navbar from the partials and add to the index hbs template.
 
 ```
 function registerPartials() {
@@ -47,11 +42,12 @@ function registerPartials() {
 }
 ```
 
-This code will render the body data to the main.hbs file, we pass in 2 args(here 1 since we aren't passing data) name (of the hbs body) and data (in object format)
+This code will render the html page along with the data, we pass in 2 args, name (of the hbs page) and data (in object format)
 
 ```
 function renderTemplate(name, data*) {
   let filePath = path.join(__dirname, "views", "layouts", name + ".handlebars");
+
   console.log(filePath);  /Users/emmanuel/Documents/MERN/handlebars/views/layouts/main.handlebars
 
   let templateText = fs.readFileSync(filePath, "utf-8");
@@ -66,7 +62,7 @@ Filepaths
 
 `import path from "path";`
 
-`__dirname` gives us the path of the project /Users/emmanuel/Documents/MERN/handlebars
+`__dirname` gives us the absolute path of the project /Users/emmanuel/Documents/MERN/handlebars
 To this we join the file path which is in view > layouts folder and then append the extension to the file name
 
 Then we compile this template using hbs and render it.
@@ -85,16 +81,19 @@ function getAll(callback) {
 routing in `index.js`
 
 ```
-case "/users":
-  db((err, result) => {
+else if (path == "/users" && req.method == "GET") {
+  db.getAll((err, result) => {
+    console.log(result);
+
     let content = { data: result };
     - we have to pass the data in object format since in `getData handlebars` we access values using this.
+    console.log(content);
 
     res.end(renderTemplate("getData", content));
-  });
-  break;
+});
 
 // renderTemplate fn
+
 let filePath = path.join(__dirname, "views", name + ".handlebars");
 console.log(filePath);
 let templateText = fs.readFileSync(filePath, "utf-8");
@@ -146,7 +145,7 @@ return template(data);
 }
 ```
 
-We are storing the result into `{ data: result }` this format cause now we have a variable (data here) which can be used to iterate each objects in the array of objects from the getData.handlebars
+We are storing the result into `{ data: result }` format cause now we have a variable (data here) which can be used to iterate each objects in the array of objects from the getData.handlebars
 
 `getData.handlebars`
 
