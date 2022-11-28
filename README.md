@@ -173,3 +173,90 @@ We are storing the result into `{ data: result }` format cause now we have a var
     </table>
 </div>
 ```
+
+## Add a new entry to the db
+
+We an use postman with post method to send a request to the create url and gett the query from the url and passing it (object) to the sql query fns.
+
+Here we'll create a form(in place of postman), to add person details and add it to the db.
+
+- Firstly create a new hbs file `addData.hbs`.
+- Now create 2 routes for this page
+  - one for the get and another for post, once we do a req to the page to add new user it is GET method and once the form page is rendered and we input and submit the details this is a POST method, ie on clicking the submit button the data is sent to the server via the url(same url with the query appended to it after ?, since this is a post method the query is hidden), so this is the second request.
+
+```
+<form method="post">
+                    <div>
+                        <label for="p_id">p_id</label>
+                        <input type="text" name="p_id" id="p_id" class="form-control" placeholder="Enter p_id">
+                    </div>
+...
+                    <div>
+                        <label for="p_country">p_country</label>
+                        <input type="name" name="p_country" id="p_country" class="form-control"
+                            placeholder="Enter p_country">
+                    </div>
+
+                    {{#if result}}
+                    {{#if result.success}}
+                    <div class="alert alert-success">
+                        Data saved successfully.
+                    </div>
+
+                    {{else}}
+                    <div class="alert alert-danger">
+                        Unable to Save Data.
+                    </div>
+                    {{/if}}
+
+                    {{/if}}
+
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+```
+
+- We render the form page without any data
+
+```
+else if (path == "/users/add" && req.method == "GET") {
+    let template = renderTemplate("addData", {});
+    res.end(template);
+```
+
+This is similar to the way we send req from postman.
+
+```
+else if (path == "/users/add" && req.method == "POST") {
+    console.log("Post reached");
+
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data.toString();
+    });
+    console.log(formData);
+    req.on("end", () => {
+      let query = qs.parse(formData);
+      db.addOne(query, (err, result) => {
+        //   var content = { data: result };
+        let content = {
+          result: {
+            success: "true",
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("addData", content));
+      });
+    });
+  }
+```
+
+- We get the url in the formData
+- We parse it to get the query which is in object format
+- We pass the query to the sql query executing fns.
+- Then we again render the template, this time with a data object

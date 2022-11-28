@@ -33,10 +33,10 @@ const server = http.createServer((req, res) => {
     // instead of postman we send req directly from a form in this url
     let formData = "";
     req.on("data", (data) => {
-      formData += data;
+      formData += data.toString();
     });
     console.log(formData);
-    res.on("end", () => {
+    req.on("end", () => {
       let query = qs.parse(formData);
       db.addOne(query, (err, result) => {
         //   var content = { data: result };
@@ -58,7 +58,6 @@ const server = http.createServer((req, res) => {
 
 function renderTemplate(name, data) {
   console.log(__dirname);
-  //   let filePath = path.join(__dirname, "views", "layouts", name + ".handlebars"); // for testing handlebars only since only main file is in layouts
   let filePath = path.join(__dirname, "views", name + ".handlebars");
   console.log(filePath);
   let templateText = fs.readFileSync(filePath, "utf-8");
