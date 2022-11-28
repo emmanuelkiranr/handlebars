@@ -25,6 +25,34 @@ const server = http.createServer((req, res) => {
       console.log(content);
       res.end(renderTemplate("getData", content));
     });
+  } else if (path == "/users/add" && req.method == "GET") {
+    let template = renderTemplate("addData", {});
+    res.end(template);
+  } else if (path == "/users/add" && req.method == "POST") {
+    console.log("Post reached");
+    // instead of postman we send req directly from a form in this url
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data;
+    });
+    console.log(formData);
+    res.on("end", () => {
+      let query = qs.parse(formData);
+      db.addOne(query, (err, result) => {
+        //   var content = { data: result };
+        let content = {
+          result: {
+            success: "true",
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("addData", content));
+      });
+    });
   }
 });
 
@@ -39,10 +67,25 @@ function renderTemplate(name, data) {
 }
 
 function registerPartials() {
-  let filePath = path.join(__dirname, "views", "partials", "navbar.handlebars");
-  console.log(filePath);
-  let templateText = fs.readFileSync(filePath, "utf-8");
+  let filePathNav = path.join(
+    __dirname,
+    "views",
+    "partials",
+    "navbar.handlebars"
+  );
+  let filePathHead = path.join(
+    __dirname,
+    "views",
+    "partials",
+    "head.handlebars"
+  );
+
+  // console.log(filePath);
+  let templateText = fs.readFileSync(filePathNav, "utf-8");
+  let templateHead = fs.readFileSync(filePathHead, "utf-8");
+
   Handlebars.registerPartial("navbar", templateText);
+  Handlebars.registerPartial("head", templateHead);
 }
 
 server.listen(3000);
