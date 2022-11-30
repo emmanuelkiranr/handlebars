@@ -183,6 +183,8 @@ Here we'll create a form(in place of postman), to add person details and add it 
 - Firstly create a new hbs file `addData.hbs`.
 - Now create 2 routes for this page
   - one for the get and another for post, once we do a req to the page to add new user it is GET method and once the form page is rendered and we input and submit the details this is a POST method, ie on clicking the submit button the data is sent to the server via the url(same url with the query appended to it after ?, since this is a post method the query is hidden), so this is the second request.
+ 
+Eventhough the request urls are same, in the server they are handled differently since the method is different
 
 ```
 <form method="post">
