@@ -16,4 +16,10 @@ function addOne(data, callback) {
   ];
   db(sql, values, callback);
 }
-export default { getAll, addOne };
+
+function getOne(p_id, callback) {
+  let sql = `select * from person where p_id=?`;
+  db(sql, p_id, callback);
+}
+
+export default { getAll, addOne, getOne, update };

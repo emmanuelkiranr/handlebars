@@ -12,7 +12,7 @@ function getConnection() {
 }
 
 function executeQuery(query, parameters, callback) {
-  let connection = getConnection();
+  let connection = getConnection(); // authorization happens here we don't need sync like in sequelize
   connection.connect((err) => {
     if (!err) {
       console.log("db connection success");

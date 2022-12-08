@@ -15,6 +15,7 @@ registerPartials();
 const server = http.createServer((req, res) => {
   let link = url.parse(req.url, true);
   let path = link.pathname;
+  let query = link.query;
 
   if (path == "/" && req.method == "GET") {
     res.end(renderTemplate("index", { data: "Welcome To SQL DataBase" }));
@@ -52,6 +53,14 @@ const server = http.createServer((req, res) => {
         }
         res.end(renderTemplate("addData", content));
       });
+    });
+  } else if (path == "/users/get" && req.method == "GET") {
+    console.log("request reached");
+    let id = query.p_id;
+    console.log(id);
+    db.getOne(id, (err, result) => {
+      let content = { data: result };
+      res.end(renderTemplate("getOne", content));
     });
   }
 });

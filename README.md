@@ -264,3 +264,21 @@ else if (path == "/users/add" && req.method == "POST") {
 - We parse it to get the query which is in object format
 - We pass the query to the sql query executing fns.
 - Then we again render the template, this time with a data object
+
+## Get details of a single user
+
+```
+else if (path == "/users/get" && req.method == "GET") {
+    console.log("request reached");
+    let id = query.p_id;
+    console.log(id);
+    db.getOne(id, (err, result) => {
+      let content = { data: result };
+      res.end(renderTemplate("getOne", content));
+    });
+}
+```
+
+## update data a single user
+
+handlebars template for update & delete
