@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+{{>head}}
+
+<body>
+    {{>navbar}}
+
+    <h1 class="text-center">Delete person data</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+                <form method="post">
+                    <div>
+                        <label for="p_id">Enter p_id to delete</label>
+                        <input type="text" name="p_id" id="p_id" class="form-control" placeholder="Enter p_id">
+                    </div>
+                    {{#if result}}
+                    {{#if result.success}}
+                    <div class="alert alert-success">
+                        Row deleted successfully.
+                    </div>
+
+                    {{else}}
+                    <div class="alert alert-danger">
+                        Unable to delete.
+                    </div>
+                    {{/if}}
+
+                    {{/if}}
+
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>

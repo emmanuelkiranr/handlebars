@@ -85,6 +85,29 @@ const server = http.createServer((req, res) => {
         res.end(renderTemplate("update", content));
       });
     });
+  } else if (path == "/users/delete" && req.method == "GET") {
+    res.end(renderTemplate("delete", {}));
+  } else if (path == "/users/delete" && req.method == "POST") {
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data.toString();
+    });
+    req.on("end", () => {
+      let query = qs.parse(formData);
+      db.deleteRow(query, (err, result) => {
+        let content = {
+          result: {
+            success: true,
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("delete", content));
+      });
+    });
   }
 });
 

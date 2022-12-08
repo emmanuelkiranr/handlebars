@@ -281,4 +281,57 @@ else if (path == "/users/get" && req.method == "GET") {
 
 ## update data a single user
 
-handlebars template for update & delete
+```
+else if (path == "/users/update" && req.method == "GET") {
+    res.end(renderTemplate("update", {}));
+  } else if (path == "/users/update" && req.method == "POST") {
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data.toString();
+    });
+    req.on("end", () => {
+      let query = qs.parse(formData);
+      db.update(query, (err, result) => {
+        let content = {
+          result: {
+            success: "true",
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("update", content));
+      });
+    });
+```
+
+## Delete userdata using id
+
+```
+else if (path == "/users/delete" && req.method == "GET") {
+    res.end(renderTemplate("delete", {}));
+  } else if (path == "/users/delete" && req.method == "POST") {
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data.toString();
+    });
+    req.on("end", () => {
+      let query = qs.parse(formData);
+      db.deleteRow(query, (err, result) => {
+        let content = {
+          result: {
+            success: true,
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("delete", content));
+      });
+    });
+  }
+```

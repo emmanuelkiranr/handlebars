@@ -27,4 +27,10 @@ function update(data, callback) {
   let values = [data.p_name, data.p_id];
   db(sql, values, callback);
 }
-export default { getAll, addOne, getOne, update };
+
+function deleteRow(data, callback) {
+  let sql = `delete from person where p_id=?;`;
+  let values = [data.p_id];
+  db(sql, values, callback);
+}
+export default { getAll, addOne, getOne, update, deleteRow };
