@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+{{>head}}
+
+<body>
+    {{>navbar}}
+
+    <h1 class="text-center">Update person name</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 offset-sm-3">
+                <form method="post">
+                    <div>
+                        <label for="p_id">p_id</label>
+                        <input type="text" name="p_id" id="p_id" class="form-control" placeholder="Enter p_id">
+                    </div>
+
+                    <div>
+                        <label for="p_name">p_name</label>
+                        <input type="text" name="p_name" id="p_name" class="form-control" placeholder="Enter p_name">
+                    </div>
+                    {{#if result}}
+                    {{#if result.success}}
+                    <div class="alert alert-success">
+                        Data saved successfully.
+                    </div>
+
+                    {{else}}
+                    <div class="alert alert-danger">
+                        Unable to Save Data.
+                    </div>
+                    {{/if}}
+
+                    {{/if}}
+
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+</body>
+
+</html>

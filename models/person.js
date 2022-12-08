@@ -22,4 +22,9 @@ function getOne(p_id, callback) {
   db(sql, p_id, callback);
 }
 
+function update(data, callback) {
+  let sql = `update person set p_name=? where p_id=?`;
+  let values = [data.p_name, data.p_id];
+  db(sql, values, callback);
+}
 export default { getAll, addOne, getOne, update };

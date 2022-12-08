@@ -62,6 +62,29 @@ const server = http.createServer((req, res) => {
       let content = { data: result };
       res.end(renderTemplate("getOne", content));
     });
+  } else if (path == "/users/update" && req.method == "GET") {
+    res.end(renderTemplate("update", {}));
+  } else if (path == "/users/update" && req.method == "POST") {
+    let formData = "";
+    req.on("data", (data) => {
+      formData += data.toString();
+    });
+    req.on("end", () => {
+      let query = qs.parse(formData);
+      db.update(query, (err, result) => {
+        let content = {
+          result: {
+            success: "true",
+            error: [],
+          },
+        };
+        if (err) {
+          console.log(err);
+          content.result.success = false;
+        }
+        res.end(renderTemplate("update", content));
+      });
+    });
   }
 });
 
